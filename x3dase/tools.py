@@ -90,7 +90,10 @@ def get_atom_kinds(atoms, scale, props = {}):
         atom_kinds[kind]['material'] = {'diffuseColor': tuple(color), 'transparency': 0.01}
         atom_kinds[kind]['sphere'] = {'radius': radius*scale}
         atom_kinds[kind]['balltype'] = None
-        # bond
+        if "additional_data" in atoms.__dict__.keys():
+            add_data = atoms.additional_data
+            add_data_on_idxs = [addit for idx, addit in enumerate(add_data) if idx in inds]
+            atom_kinds[kind]["additional_data"] = add_data_on_idxs
         atom_kinds[kind]['lengths'] = []
         atom_kinds[kind]['centers'] = []
         atom_kinds[kind]['rotations'] = []

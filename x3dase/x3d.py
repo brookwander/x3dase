@@ -30,7 +30,7 @@ class X3D:
             images = [images]
         self.images = images
         self.nimage = len(images)
-        self._atoms = images[0].copy()
+        self._atoms = images[0]
         self.natom = len(self._atoms)
         self.data = atoms2dict(self._atoms)
         self.data['uuid'] = '"%s"'%self.uuid
@@ -168,6 +168,7 @@ class X3D:
         label_str = []
         group_ele = []
         group_ind = []
+        group_add_data = []
         for kind, datas in self.atom_kinds.items():
             material0 = build_tag('Material', name = 'am_%s'%self.uuid, **datas['material'])
             sphere0 = build_tag('Sphere', DEF = 'asp_%s'%kind, **datas['sphere'])
@@ -195,6 +196,13 @@ class X3D:
                 atomic_str.extend(build_tag('Transform', DEF ="at_%s_%s"%(datas['indexs'][iatom], self.uuid), uuid = self.uuid, id ="at_%s_%s"%(datas['indexs'][iatom], self.uuid), radius = datas['sphere']['radius'], name = "at_%s"%(self.uuid), body=shape, translation = tuple(pos), scale = "1 1 1"))
                 # index
                 appearance = build_tag('Appearance', USE = 'text_app_%s'%kind) #, justify='"MIDDLE", "MIDDLE"')
+                if "additional_data" in datas:
+                    add_data = build_tag('Text', string = datas['additional_data'][iatom], solid = 'true', body = fontstyle0)
+                else:
+                    add_data = build_tag('Text', string = "n/a", solid = 'true', body = fontstyle0)
+                shape_add_data = build_tag('Shape', body = appearance + add_data)
+                shape_add_data = build_tag('Billboard', axisOfRotation = (0 ,0 ,0), body = shape_add_data)
+                group_add_data.extend(build_tag('Transform', body=shape_add_data, translation = tuple(pos)))
                 ind = build_tag('Text', string = datas['indexs'][iatom], solid = 'true', body = fontstyle0)
                 shape_ind = build_tag('Shape', body = appearance + ind)
                 shape_ind = build_tag('Billboard', axisOfRotation = (0 ,0 ,0), body = shape_ind)
@@ -207,9 +215,11 @@ class X3D:
         if self.label:
             group_ele = build_tag('Group', body = group_ele)
             group_ind = build_tag('Group', body = group_ind)
+            group_add_data = build_tag('Group', body = group_add_data)
             atomic_str.extend(label_str)
             atomic_str.extend(build_tag('Switch', id = "ele_%s"%self.uuid, body = group_ele, whichChoice = "-1"))
             atomic_str.extend(build_tag('Switch', id = "ind_%s"%self.uuid, body = group_ind, whichChoice = "-1"))
+            atomic_str.extend(build_tag('Switch', id = "add_%s"%self.uuid, body = group_add_data, whichChoice = "-1"))
         return atomic_str
     def draw_cells(self, celllinewidth = 0.05):
         """

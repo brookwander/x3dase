@@ -206,6 +206,7 @@ function none(uuid)
         }
     document.getElementById('ele_'.concat(uuid)).setAttribute("whichChoice", '-1');
     document.getElementById('ind_'.concat(uuid)).setAttribute("whichChoice", '-1');
+    document.getElementById('add_'.concat(uuid)).setAttribute("whichChoice", '-1');
 }
         
 function element(uuid)
@@ -222,6 +223,7 @@ function element(uuid)
         }
     document.getElementById('ele_'.concat(uuid)).setAttribute("whichChoice", '0');
     document.getElementById('ind_'.concat(uuid)).setAttribute("whichChoice", '-1');
+    document.getElementById('add_'.concat(uuid)).setAttribute("whichChoice", '-1');
     document.getElementById('bs_'.concat(uuid)).setAttribute("whichChoice", '-1');
 }
 function index(uuid)
@@ -237,6 +239,24 @@ function index(uuid)
         objs[i].setAttribute("transparency", "0.4");
         }
     document.getElementById('ind_'.concat(uuid)).setAttribute("whichChoice", '0');
+    document.getElementById('ele_'.concat(uuid)).setAttribute("whichChoice", '-1');
+    document.getElementById('add_'.concat(uuid)).setAttribute("whichChoice", '-1');
+    document.getElementById('bs_'.concat(uuid)).setAttribute("whichChoice", '-1');
+}
+function additional_data(uuid)
+{
+    if (atoms_dict[uuid]['label']=='False'){ 
+        alert('To show index, please set label=True in your code!');
+        $('#error_'.concat(uuid)).html('(^_^) To show index, please set label=True in your code!');
+		return ;
+	}
+    var objs = document.getElementsByName(''.concat('am_'.concat(uuid)));
+    var max=objs.length;
+    for (var i=0; i< max; i++) {
+        objs[i].setAttribute("transparency", "0.4");
+        }
+    document.getElementById('add_'.concat(uuid)).setAttribute("whichChoice", '0');
+    document.getElementById('ind_'.concat(uuid)).setAttribute("whichChoice", '-1');
     document.getElementById('ele_'.concat(uuid)).setAttribute("whichChoice", '-1');
     document.getElementById('bs_'.concat(uuid)).setAttribute("whichChoice", '-1');
 }
